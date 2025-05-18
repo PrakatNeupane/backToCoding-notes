@@ -15,64 +15,65 @@ const SignUp = () => {
     e.preventDefault();
     if (!name) {
       setError("Please enter your name");
-      console.log("error" + error);
       return;
     }
     if (!validateEmail(email)) {
       setError("Please enter a valid email address");
       return;
     }
-
     if (!password) {
       setError("Please enter your password");
       return;
     }
-
+    console.log("error" + error);
     setError("");
+
+    // signUp api call
   };
   return (
     <>
       <Navbar />
       <div className="flex items-center justify-center mt-28">
         <div className="w-96 border border-bprimary rounded bg-white px-7 py-10">
-          <form onSubmit={handleSignUp}></form>
-          <h4 className="text-2xl mb-7">SignUp</h4>
+          <form onSubmit={handleSignUp}>
+            <h4 className="text-2xl mb-7">SignUp</h4>
 
-          <input
-            type="text"
-            placeholder="Name"
-            className="input-box"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+            <input
+              type="text"
+              placeholder="Name"
+              className="input-box"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
 
-          <input
-            type="text"
-            placeholder="Email"
-            className="input-box"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+            <input
+              type="text"
+              placeholder="Email"
+              className="input-box"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
-          <PasswordInput
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+            <PasswordInput
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
 
-          {error && <p className="text-red-500 text-xs pb-1">{error}</p>}
-          <button
-            type="submit"
-            className="btn-primary cursor-pointer"
-            onSubmit={() => handleSignUp()}
-          >
-            Create Account
-          </button>
-          <p className="text-sm text-center mt-4">
-            Already have an account?{" "}
-            <Link to="/login" className="font-medium text-primary underline">
-              Login
-            </Link>
-          </p>
+            {error && <p className="text-red-500 text-xs pb-1">{error}</p>}
+            <button
+              type="submit"
+              className="btn-primary cursor-pointer"
+              onSubmit={() => handleSignUp()}
+            >
+              Create Account
+            </button>
+            <p className="text-sm text-center mt-4">
+              Already have an account?{" "}
+              <Link to="/login" className="font-medium text-primary underline">
+                Login
+              </Link>
+            </p>
+          </form>
         </div>
       </div>
     </>
