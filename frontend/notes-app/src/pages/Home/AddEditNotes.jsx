@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import TagInput from "../../components/Input/TagInput";
 import { MdClose } from "react-icons/md";
 
-const AddEditNotes = ({ noteData, type, onClose }) => {
+const AddEditNotes = ({ type, onClose }) => {
+  // add noteData on the props above later.
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState([]);
