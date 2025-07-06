@@ -143,12 +143,11 @@ app.post("/add-note", authenticateToken, async (req, res) => {
   }
 });
 
+// Edit note
 app.put("/edit-note/:noteId", authenticateToken, async (req, res) => {
   const noteId = req.params.noteId;
   const { title, content, tags, isPinned } = req.body;
   const { user } = req.user;
-  console.log("user: ", user);
-
   if (!title && !content && !tags) {
     return res.status(400).json({ error: true, message: "No changes made" });
   }
@@ -176,6 +175,71 @@ app.put("/edit-note/:noteId", authenticateToken, async (req, res) => {
       .json({ error: true, message: "Internal server error" });
   }
 });
+
+// Get all the notes
+app.get("/get-all-notes", authenticateToken, async (req, res) => {
+  const { user } = req.user;
+  try {
+    const notes = await Note.find({ userId: user._id }).sort({ isPinned: -1 });
+    return res.status(400).json({
+      error: false,
+      notes,
+      message: "Notes retrieved successfully for the given user. ",
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: true, message: "Internal Server Error" });
+  }
+});
+
+// Delete a note
+app.delete("/delete-note/:noteId", authenticateToken, async (req, res) => {
+  const { user } = req.user;
+  const noteId = req.params.noteId;
+  try {
+    const note = await Note.findOne({ _id: noteId, userId: user._id });
+
+    if (!note)
+      return res.status(404).json({ error: true, message: "Note not found" });
+    await Note.deleteOne({ _id: noteId, userId: user._id });
+    res
+      .status(400)
+      .json({ error: false, message: "Note deleted successfully" });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: true, message: "Internal Server Error" });
+  }
+});
+
+// Update note isPinned value
+app.put("/update-note-pinned/:noteId", authenticateToken, async (req, res) => {
+  const noteId = req.params.noteId;
+  const { isPinned } = req.body;
+  const { user } = req.user;
+
+  try {
+    const note = await Note.findOne({ _id: noteId, userId: user._id });
+    if (!note)
+      return res.status(404).json({ error: true, message: "Note not found" });
+
+    note.isPinned = isPinned;
+
+    await note.save();
+
+    return res.json({
+      error: false,
+      message: "Note updated successfully",
+      note,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: true, message: "Internal server error" });
+  }
+});
+
 app.listen(8000, () => {
   console.log("Server running on http://localhost:8000");
 });
